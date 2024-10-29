@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { update, deleteProduct } from "../../actions/vectordb";
+import { update, deleteProduct, get } from "../../actions/vectordb";
 import { useRouter } from "next/navigation";
 
 export default function EditListing({ params }: { params: { id: string } }) {
@@ -18,18 +18,21 @@ export default function EditListing({ params }: { params: { id: string } }) {
   });
 
   useEffect(() => {
-    // Fetch product details here
-    // For now, we'll use placeholder data
-    setProduct({
-      id: parseInt(params.id),
-      title: "Sample Product",
-      description: "This is a sample product description",
-      category: "Electronics",
-      price: "99.99",
-      brand: "SampleBrand",
-      condition: "New",
-      color: "Black",
-    });
+    const fetchProduct = async () => {
+      const fetchedProduct = await get(parseInt(params.id));
+      setProduct({
+        id: parseInt(params.id),
+        title: fetchedProduct.title,
+        description: fetchedProduct.description,
+        category: fetchedProduct.category,
+        price: fetchedProduct.price,
+        brand: fetchedProduct.brand,
+        condition: fetchedProduct.condition,
+        color: fetchedProduct.color,
+      });
+    };
+
+    fetchProduct();
   }, [params.id]);
 
   const handleChange = (

@@ -57,6 +57,13 @@ export async function load(product: Product) {
   }
 }
 
+export async function get(id: number) {
+  const client = await pool.connect();
+  const query = `SELECT * FROM products WHERE id = $1`;
+  const result = await client.query(query, [id]);
+  return result.rows[0];
+}
+
 export async function update(product: Product) {
   const { id, title, description, category, price, brand, condition, color } =
     product;
